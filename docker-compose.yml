@@ -1,0 +1,48 @@
+version: '3.7'
+services:
+  web_api:
+    container_name: web_api
+    build:
+      context: ./backend/app
+      dockerfile: Dockerfile
+    volumes:
+      - ./backend/app:/backend/app
+      - ./backend/log:/var/log
+    command: uvicorn api.server:app --reload --workers 1 --host 0.0.0.0 --port 8000
+    ports:
+      - 8000:8000
+
+  web_api2:
+    container_name: web_api2
+    build:
+      context: ./backend/app
+      dockerfile: Dockerfile
+    volumes:
+      - ./backend/app:/backend/app
+      - ./backend/log:/var/log
+    command: uvicorn api.server:app --reload --workers 1 --host 0.0.0.0 --port 8001
+    ports:
+      - 8001:8001
+
+  web_api3:
+    container_name: web_api3
+    build:
+      context: ./backend/app
+      dockerfile: Dockerfile
+    volumes:
+      - ./backend/app:/backend/app
+      - ./backend/log:/var/log
+    command: uvicorn api.server:app --reload --workers 1 --host 0.0.0.0 --port 8002
+    ports:
+      - 8002:8002
+
+  server:
+    container_name: nginx_proxy
+    build: ./backend/nginx
+    volumes:
+      - ./backend/nginx/nginx.conf:/etc/nginx/conf.d/default.conf
+      - ./backend/log:/var/log
+    ports:
+      - 80:80
+    environment:
+      TZ: "Asia/Tokyo"
